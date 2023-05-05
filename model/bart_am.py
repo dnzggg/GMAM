@@ -8,6 +8,7 @@ from fastNLP.models import Seq2SeqModel
 from torch import device, nn
 import numpy as np
 
+
 class FBartEncoder(Seq2SeqEncoder):
     def __init__(self, encoder):
         super().__init__()
@@ -237,9 +238,9 @@ class BartSeq2SeqModel(Seq2SeqModel):
     def build_model(cls, bart_model, tokenizer, label_ids, decoder_type=None, copy_gate=False,
                     use_encoder_mlp=False, use_recur_pos=False, tag_first=False,
                     token_cls=False, replace_pos = True,position_type=0):
-        model = BartModel.from_pretrained(bart_model,use_cdn=False)
+        model = BartModel.from_pretrained(bart_model)
         num_tokens, _ = model.encoder.embed_tokens.weight.shape
-        model.resize_token_embeddings(len(tokenizer.unique_no_split_tokens)+num_tokens)
+        model.resize_token_embeddings(len(tokenizer))
         encoder = model.encoder
         decoder = model.decoder
 
@@ -247,7 +248,7 @@ class BartSeq2SeqModel(Seq2SeqModel):
             decoder.set_position_embedding(label_ids[0], tag_first)
 
         _tokenizer = BartTokenizer.from_pretrained(bart_model)
-        for token in tokenizer.unique_no_split_tokens:
+        for token in tokenizer.additional_special_tokens:
             if token[:2] == '<<':
                 index = tokenizer.convert_tokens_to_ids(tokenizer.tokenize(token))
                 if len(index)>1:
@@ -305,7 +306,6 @@ class BartSeq2SeqModel(Seq2SeqModel):
                     }
         else:
             raise TypeError(f"Unsupported return type from Decoder:{type(self.decoder)}")
-
 
 
 class BartState(State):

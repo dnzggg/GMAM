@@ -116,11 +116,11 @@ class BartAMPipe_essay(Pipe):
         self.cur_num_token = cur_num_tokens
 
         tokens_to_add = sorted(list(self.mapping.values()), key=lambda x:len(x), reverse=True)
-        unique_no_split_tokens = self.tokenizer.unique_no_split_tokens
+        # unique_no_split_tokens = self.tokenizer.unique_no_split_tokens
         sorted_add_tokens = sorted(list(tokens_to_add), key=lambda x:len(x), reverse=True)
         for tok in sorted_add_tokens:
             assert self.tokenizer.convert_tokens_to_ids([tok])[0]==self.tokenizer.unk_token_id
-        self.tokenizer.unique_no_split_tokens = unique_no_split_tokens + sorted_add_tokens
+        # self.tokenizer.unique_no_split_tokens = unique_no_split_tokens + sorted_add_tokens
         self.tokenizer.add_tokens(sorted_add_tokens)
         self.mapping2id = {}
         self.mapping2targetid = {}
@@ -165,7 +165,7 @@ class BartAMPipe_essay(Pipe):
             word_bpes = [[self.tokenizer.bos_token_id]]
             word_tokens = ['<pad>']
             for word in raw_words:
-                bpes = self.tokenizer.tokenize(word, add_prefix_space=True)
+                bpes = self.tokenizer.tokenize(word)
                 word_tokens.extend(bpes)
                 bpes = self.tokenizer.convert_tokens_to_ids(bpes)
                 word_bpes.append(bpes)
@@ -195,8 +195,8 @@ class BartAMPipe_essay(Pipe):
                 # 这里需要evaluate是否是对齐的
                 for idx, word in zip((t_start_bpe, t_end_bpe, s_start_bpe, s_end_bpe),
                                      (targets['term'][0], targets['term'][-1], sources['term'][0], sources['term'][-1])):
-                    assert _word_bpes[idx] == self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(word, add_prefix_space=True)[:1])[0] or \
-                           _word_bpes[idx] == self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(word, add_prefix_space=True)[-1:])[0]
+                    assert _word_bpes[idx] == self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(word)[:1])[0] or \
+                           _word_bpes[idx] == self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(word)[-1:])[0]
 
                 if self._first:
                     target_spans.append([t_start_bpe+target_shift, t_end_bpe+target_shift,self.mapping2targetid[targets['component']]+2,

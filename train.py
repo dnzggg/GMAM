@@ -13,7 +13,7 @@ parser.add_argument('--num_beams', default=4, type=int)
 parser.add_argument('--n_epochs', default=75, type=int)
 parser.add_argument('--decoder_type', default='avg_score', type=str, choices=['None', 'avg_score'])
 parser.add_argument('--length_penalty', default=1.0, type=float)
-parser.add_argument('--bart_name', default='/data/heyuhang/pretrain_model/bart-base', type=str)
+parser.add_argument('--bart_name', default='facebook/bart-base', type=str)
 parser.add_argument('--use_encoder_mlp', type=int, default=1)
 parser.add_argument('--save_model', type=int, default=1)
 parser.add_argument('--cuda_rank', type=int, default=3)
@@ -98,7 +98,7 @@ elif 'cdcp' in dataset_name:
     
 @cache_results(cache_fn, _refresh=True)
 def get_data():
-    pipe = BartPipe(tokenizer=bart_name, _first=_first)
+    pipe = BartPipe(_first=_first)
     data_bundle = pipe.process_from_file(f'./data/{dataset_name}', demo=demo)
     return data_bundle, pipe.tokenizer, pipe.mapping2id, pipe.mapping2targetid , pipe.relation_ids, pipe.component_ids, pipe.none_ids
 
@@ -106,7 +106,7 @@ data_bundle, tokenizer, mapping2id, mapping2targetid,relation_ids,component_ids,
 
 
 
-print("The number of tokens in tokenizer ", len(tokenizer.decoder))
+# print("The number of tokens in tokenizer ", len(tokenizer.decoder))
 
 bos_token_id = 0  #
 eos_token_id = 1  #
