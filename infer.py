@@ -53,7 +53,7 @@ position_type = args.position_type
 _first = False
 
 ####### model in the save_models dir
-model_to_load = "save_models/best_SequenceGeneratorModel_triple_f_2023-04-16-23-07-25-556294"
+model_to_load = "save_models/best_SequenceGeneratorModel_triple_f_2023-05-06-16-28-10-488778"
 ####### model in the save_models dir
 
 seed_everything(seed)
@@ -112,7 +112,7 @@ def get_data():
 
 data_bundle, tokenizer, mapping2id, mapping2targetid,relation_ids,component_ids,none_ids = get_data()
 
-print("The number of tokens in tokenizer ", len(tokenizer.decoder))
+# print("The number of tokens in tokenizer ", len(tokenizer.decoder))
 
 bos_token_id = 0  #
 eos_token_id = 1  #

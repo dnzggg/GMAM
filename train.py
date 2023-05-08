@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser()
 # parser.add_argument('--dataset_name', default='cdcp', type=str)
 parser.add_argument('--dataset_name', default='essay', type=str)
 parser.add_argument('--lr', default=6e-5, type=float)
-parser.add_argument('--batch_size', default=32, type=int)
+parser.add_argument('--batch_size', default=16, type=int)
 parser.add_argument('--num_beams', default=4, type=int)
 parser.add_argument('--n_epochs', default=75, type=int)
 parser.add_argument('--decoder_type', default='avg_score', type=str, choices=['None', 'avg_score'])
@@ -50,8 +50,9 @@ layernorm_decay = args.layernorm_decay
 seed_everything(seed)
 
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '{}'.format(args.cuda_rank)
-print("cuda rank",os.environ['CUDA_VISIBLE_DEVICES'])
+# os.environ['CUDA_VISIBLE_DEVICES'] = '{}'.format(args.cuda_rank)
+# print("cuda rank",os.environ['CUDA_VISIBLE_DEVICES'])
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 #######hyper
 #######hyper
 
@@ -134,6 +135,7 @@ if torch.cuda.is_available():
     device = 'cuda'
 else:
     device = 'cpu'
+print(device)
 
 # norm for not bart layer
 parameters = []
